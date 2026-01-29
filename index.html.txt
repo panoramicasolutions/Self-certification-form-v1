@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HNWI & Sophisticated Investor Self-Certification</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --primary-bg: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #6B8DD6 50%, #8E54E9 75%, #4776E6 100%);
+            --text-white: #ffffff;
+            --text-light: rgba(255, 255, 255, 0.85);
+            --text-muted: rgba(255, 255, 255, 0.7);
+            --option-bg: rgba(255, 255, 255, 0.15);
+            --option-hover: rgba(255, 255, 255, 0.25);
+            --option-selected: rgba(255, 255, 255, 0.3);
+            --btn-white: #ffffff;
+            --input-border: rgba(255, 255, 255, 0.4);
+            --error-color: #ff9800;
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            min-height: 100vh;
+            background: var(--primary-bg);
+            background-attachment: fixed;
+            color: var(--text-white);
+            overflow-x: hidden;
+        }
+
+        /* Animated background effect */
+        .bg-effect {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .bg-effect::before {
+            content: '';
+            position: absolute;
+            width: 150%;
+            height: 150%;
+            top: -25%;
+            left: -25%;
+            background: radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                        radial-gradient(ellipse at 70% 80%, rgba(138, 100, 255, 0.15) 0%, transparent 50%),
+                        radial-gradient(ellipse at 50% 50%, rgba(100, 150, 255, 0.1) 0%, transparent 60%);
+            animation: bgMove 20s ease-in-out infinite;
+        }
+        @keyframes bgMove {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(2%, 2%) rotate(1deg); }
+            66% { transform: translate(-2%, 1%) rotate(-1deg); }
+        }
+
+        /* --- NUOVO STILE PER IL LOGO CENTRALE --- */
+        .main-logo {
+            position: absolute;
+            top: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px; /* Dimensione regolabile */
+            height: auto;
+            z-index: 20;
+        }
+
+        /* Progress bar */
+        .progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(255,255,255,0.2);
+            z-index: 100;
+        }
+        .progress-bar {
+            height: 100%;
+            background: var(--btn-white);
+            transition: width 0.4s ease;
+            width: 0%;
+        }
+
+        /* Main container */
+        .form-container {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 140px 20px 40px 20px; /* Aumentato padding top per il logo */
+        }
+
+        /* Slides */
+        .slide {
+            display: none;
+            width: 100%;
+            max-width: 750px;
+            /* Rimosso padding-right che serviva per i loghi laterali */
+            padding-right: 0; 
+            animation: fadeInUp 0.5s ease;
+        }
+        .slide.active {
+            display: block;
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Welcome slide */
+        .welcome-slide {
+            text-align: center;
+        }
+        .welcome-slide h1 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            line-height: 1.3;
+            margin-bottom: 30px;
+        }
+        .welcome-slide .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            font-style: italic;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .welcome-slide .info {
+            font-size: 1rem;
+            color: var(--text-muted);
+            font-style: italic;
+            line-height: 1.6;
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Question number */
+        .question-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-right: 12px;
+            vertical-align: middle;
+        }
+
+        /* Question title */
+        .question-title {
+            font-size: 1.6rem;
+            font-weight: 500;
+            line-height: 1.4;
+            margin-bottom: 30px;
+        }
+        .question-title .required {
+            color: #ff6b6b;
+        }
+
+        /* Description text */
+        .question-desc {
+            color: var(--text-light);
+            font-size: 0.95rem;
+            line-height: 1.7;
+            margin-bottom: 25px;
+        }
+        .question-desc strong {
+            color: var(--text-white);
+            font-weight: 600;
+        }
+
+        /* Definition blocks */
+        .definition-block {
+            margin-bottom: 25px;
+        }
+        .definition-block h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-white);
+        }
+        .definition-block p {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        /* Form inputs */
+        .form-group {
+            margin-bottom: 25px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 0.95rem;
+            font-weight: 500;
+            margin-bottom: 10px;
+            color: var(--text-white);
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px 0;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid var(--input-border);
+            color: var(--text-white);
+            font-size: 1.1rem;
+            font-family: inherit;
+            transition: border-color 0.3s ease;
+        }
+        .form-group input::placeholder {
+            color: rgba(255,255,255,0.5);
+        }
+        .form-group input:focus {
+            outline: none;
+            border-bottom-color: var(--text-white);
+        }
+
+        /* Phone input container */
+        .phone-input-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .country-select {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--input-border);
+            cursor: pointer;
+        }
+        .country-select .flag {
+            font-size: 1.2rem;
+        }
+        .phone-input-container input {
+            flex: 1;
+        }
+
+        /* Options */
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+        .option {
+            display: flex;
+            align-items: flex-start;
+            padding: 16px 20px;
+            background: var(--option-bg);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        .option:hover {
+            background: var(--option-hover);
+        }
+        .option.selected {
+            background: var(--option-selected);
+            border-color: rgba(255,255,255,0.3);
+        }
+        .option.error {
+            border-color: var(--error-color);
+        }
+        .option-letter {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 26px;
+            height: 26px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        .option.selected .option-letter {
+            background: rgba(255,255,255,0.4);
+        }
+        .option-text {
+            font-size: 1rem;
+            line-height: 1.5;
+            color: var(--text-white);
+        }
+        .option-text strong {
+            font-weight: 600;
+        }
+
+        /* Error message */
+        .error-message {
+            display: none;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            background: rgba(255, 152, 0, 0.2);
+            border-radius: 8px;
+            margin-bottom: 20px;
+            color: var(--error-color);
+            font-size: 0.95rem;
+            animation: shake 0.5s ease;
+        }
+        .error-message.show {
+            display: flex;
+        }
+        .error-message svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--error-color);
+            flex-shrink: 0;
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 32px;
+            background: var(--btn-white);
+            color: #333;
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: inherit;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .btn-small {
+            padding: 10px 24px;
+            font-size: 0.9rem;
+        }
+
+        /* Navigation buttons */
+        .nav-buttons {
+            position: fixed;
+            bottom: 30px;
+            right: 200px;
+            display: flex;
+            gap: 8px;
+            z-index: 100;
+        }
+        .nav-btn {
+            width: 40px;
+            height: 40px;
+            background: var(--btn-white);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        .nav-btn:hover {
+            transform: scale(1.05);
+        }
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        .nav-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: #333;
+        }
+
+        /* Thank you slide */
+        .thank-you-slide {
+            text-align: center;
+            padding-right: 0;
+        }
+        .thank-you-slide h2 {
+            font-size: 2rem;
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+        .thank-you-slide p {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            margin-bottom: 15px;
+        }
+        .thank-you-slide .stay-touch {
+            font-style: italic;
+            color: var(--text-muted);
+        }
+
+        /* Disclaimer text */
+        .disclaimer {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.7;
+            margin-bottom: 25px;
+        }
+        .disclaimer ul {
+            list-style: disc;
+            padding-left: 20px;
+            margin: 10px 0;
+        }
+        .disclaimer li {
+            margin-bottom: 8px;
+        }
+
+        /* Loading spinner */
+        .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(51,51,51,0.3);
+            border-top-color: #333;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 10px;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .slide {
+                padding-right: 0;
+            }
+            .welcome-slide h1 {
+                font-size: 1.8rem;
+            }
+            .question-title {
+                font-size: 1.3rem;
+            }
+            .nav-buttons {
+                right: 20px;
+            }
+            /* Adjust logo on mobile if needed */
+            .main-logo {
+                width: 100px;
+                top: 20px;
+            }
+            .form-container {
+                padding-top: 100px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-effect"></div>
+
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <img src="RocketPhone logo vertical.png" alt="RocketPhone.ai" class="main-logo">
+
+    <div class="form-container">
+        
+        <div class="slide welcome-slide active" data-slide="0">
+            <h1>High Net Worth Individual ("HNWI")<br>& Sophisticated Investor<br>Self-Certification</h1>
+            <p class="subtitle">The following questionnaire is an important evaluation process of its potential investors and is based on applicable securities laws and regulations.</p>
+            <p class="info">Rocketphone.ai can only accepts potential shareholders who qualify as high-net-worth individuals or self-certified sophisticated investors under the UK Financial Promotion Order (Financial Services and Markets Act 2000 (Financial Promotion) Order 2005)<br><br>All information will be kept confidential in accordance with Rocketphone.AI's Privacy Notice.</p>
+            <button class="btn" onclick="nextSlide()">Start</button>
+        </div>
+
+        <div class="slide" data-slide="1">
+            <h2 class="question-title">
+                <span class="question-number">1</span>
+                Please provide your Contact Details
+            </h2>
+            <div class="form-group">
+                <label>First name</label>
+                <input type="text" id="firstName" placeholder="Jane" required>
+            </div>
+            <div class="form-group">
+                <label>Last name</label>
+                <input type="text" id="lastName" placeholder="Smith" required>
+            </div>
+            <div class="form-group">
+                <label>Phone number</label>
+                <div class="phone-input-container">
+                    <div class="country-select">
+                        <span class="flag">🇬🇧</span>
+                        <span>▼</span>
+                    </div>
+                    <input type="tel" id="phone" placeholder="(201) 555-0123" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="email" placeholder="name@example.com" required>
+            </div>
+            <button class="btn btn-small" onclick="validateContactAndNext()">OK</button>
+        </div>
+
+        <div class="slide" data-slide="2">
+            <h2 class="question-title">
+                <span class="question-number">2</span>
+                Please confirm your Jurisdiction
+            </h2>
+            <div class="options-container" id="jurisdictionOptions">
+                <div class="option" data-value="United Kingdom" onclick="selectOption(this, 'jurisdiction')">
+                    <span class="option-letter">A</span>
+                    <span class="option-text">United Kingdom</span>
+                </div>
+            </div>
+            <button class="btn btn-small" onclick="validateSelectionAndNext('jurisdiction')">OK</button>
+        </div>
+
+        <div class="slide" data-slide="3">
+            <h2 class="question-title">
+                <span class="question-number">3</span>
+                Please select the investor definition, which best describes you
+            </h2>
+            
+            <div class="definition-block">
+                <h3>High Net-Worth Individual (HNWI) Definition:</h3>
+                <p>Either A) an annual income of at least £100,000 <strong>OR</strong><br>
+                B) Net assets of £250,000 or more. Net assets do NOT include: your home (primary residence).</p>
+            </div>
+            
+            <div class="definition-block">
+                <h3>Sophisticated Investor Definition:</h3>
+                <p>A) Made more than one investment in an unlisted company in the previous two years <strong>OR</strong><br>
+                B) Director of a company with a turnover over £1 million <strong>OR</strong><br>
+                C) Worked in a professional capacity in the private equity sector, or in the provision of finance for small and medium enterprises, in the last two years? <strong>OR</strong><br>
+                D) Been a member of a network or syndicate of business angels for more than six months, and are still a member</p>
+            </div>
+            
+            <div class="options-container" id="investorTypeOptions">
+                <div class="option" data-value="HNWI" onclick="selectOption(this, 'investorType')">
+                    <span class="option-letter">A</span>
+                    <span class="option-text">High Net-Worth Individual</span>
+                </div>
+                <div class="option" data-value="Sophisticated" onclick="selectOption(this, 'investorType')">
+                    <span class="option-letter">B</span>
+                    <span class="option-text">Self-Certified Sophisticated Investor</span>
+                </div>
+            </div>
+            <button class="btn btn-small" onclick="validateInvestorTypeAndNext()">OK</button>
+        </div>
+
+        <div class="slide" data-slide="4">
+            <h2 class="question-title">
+                <span class="question-number">4</span>
+                Please confirm whether you qualify as a high-net-worth investor on the basis that A or B apply to you.
+            </h2>
+            <p class="question-desc">In the last financial year did you have*<br>
+            <em>I accept that being a high-net-worth investor will expose me to promotions for investment where there is a significant risk of losing all the money I invest.</em></p>
+            
+            <div class="options-container" id="hnwiQualificationOptions">
+                <div class="option" data-value="Income" onclick="selectOption(this, 'hnwiQualification')">
+                    <span class="option-letter">A</span>
+                    <span class="option-text"><strong>An annual income of £100,000 or more?</strong> Income does NOT include any one-off pension withdrawals</span>
+                </div>
+                <div class="option" data-value="NetAssets" onclick="selectOption(this, 'hnwiQualification')">
+                    <span class="option-letter">B</span>
+                    <span class="option-text"><strong>Net assets of £250,000 or more?</strong> Net assets do not include: your home (primary residence), any loan secured on it or any equity released from it; your pension (or any pension withdrawals) or any right under insurance contracts. Net assets are total assets</span>
+                </div>
+            </div>
+            <button class="btn btn-small" onclick="validateHnwiQualificationAndNext()">OK</button>
+        </div>
+
+        <div class="slide" data-slide="5">
+            <h2 class="question-title">
+                <span class="question-number">5</span>
+                Please confirm whether you qualify as a Self-Certified Sophisticated Investor on the basis that A or B or C or D apply to you. <span class="required">*</span>
+            </h2>
+            <p class="question-desc"><em>I accept that being a high-net-worth investor will expose me to promotions for investment where there is a significant risk of losing all the money I invest.</em></p>
+            <p class="question-desc"><strong>In the last 2 years did you have:</strong></p>
+            
+            <div class="options-container" id="sophisticatedQualificationOptions">
+                <div class="option" data-value="Investment" onclick="selectOption(this, 'sophisticatedQualification')">
+                    <span class="option-letter">A</span>
+                    <span class="option-text">Made more <strong>than one investment</strong> in an <strong>unlisted company</strong> in the previous two years</span>
+                </div>
+                <div class="option" data-value="Director" onclick="selectOption(this, 'sophisticatedQualification')">
+                    <span class="option-letter">B</span>
+                    <span class="option-text">Director of a company with a <strong>turnover over £1 million</strong></span>
+                </div>
+                <div class="option" data-value="Professional" onclick="selectOption(this, 'sophisticatedQualification')">
+                    <span class="option-letter">C</span>
+                    <span class="option-text"><strong>Worked in a professional capacity</strong> in the private equity sector, or in the provision of finance for small and medium enterprises, in the last two years?</span>
+                </div>
+                <div class="option" data-value="Angel" onclick="selectOption(this, 'sophisticatedQualification')">
+                    <span class="option-letter">D</span>
+                    <span class="option-text">Been a <strong>member of a network or syndicate</strong> of business angels for more than six months, and are still a member</span>
+                </div>
+            </div>
+            <button class="btn btn-small" onclick="validateSophisticatedQualificationAndNext()">OK</button>
+        </div>
+
+        <div class="slide" data-slide="6">
+            <h2 class="question-title">
+                <span class="question-number">6</span>
+                Please specify your income (as defined above) to the nearest £10,000 in the last financial year.
+            </h2>
+            <p class="question-desc">This is for the FCA's Conduct of Business Sourcebook (COBS)</p>
+            <div class="form-group">
+                <input type="text" id="incomeAmount" placeholder="Type your answer here...">
+            </div>
+            <button class="btn btn-small" onclick="validateIncomeAndNext()">OK</button>
+        </div>
+
+        <div class="slide" data-slide="7">
+            <h2 class="question-title">
+                <span class="question-number">7</span>
+                Please specify your Net Assets (as defined above) to the nearest £10,000 in the last financial year.
+            </h2>
+            <p class="question-desc">This is for the FCA's Conduct of Business Sourcebook (COBS)</p>
+            <div class="form-group">
+                <input type="text" id="netAssets" placeholder="Type your answer here...">
+            </div>
+            <button class="btn btn-small" onclick="validateNetAssetsAndNext()">OK</button>
+        </div>
+
+        <div class="slide" data-slide="8">
+            <h2 class="question-title">
+                <span class="question-number">8</span>
+                I declare that I have answered yes to A and/or B, and wish to be treated as a high net worth individual.
+            </h2>
+            <div class="disclaimer">
+                I understand that this means:
+                <ul>
+                    <li>I can receive financial promotions where the contents may not comply with rules made by the Financial Conduct Authority (FCA);</li>
+                    <li>I can expect no protection from the FCA, the Financial Ombudsman Service or the Financial Services Compensation Scheme.</li>
+                </ul>
+                I am aware that it is open to me to seek advice from someone who specialises in advising on investments.<br><br>
+                I accept that I could lose all of the money I invest.<br><br>
+                I confirm that I understand that Rocketphone.ai is not acting for me, and I understand that it will not be responsible for providing me with the protections afforded to clients of the firm. I understand that it will not be advising me on the relevant transaction.*
+            </div>
+            
+            <div class="error-message" id="errorMessage8">
+                <svg viewBox="0 0 24 24"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+                <span>Please agree to the terms & conditions</span>
+            </div>
+            
+            <div class="options-container" id="hnwiDeclarationOptions">
+                <div class="option" data-value="accept" onclick="selectDeclaration(this, 'hnwiDeclaration', 8)">
+                    <span class="option-letter">A</span>
+                    <span class="option-text">I accept</span>
+                </div>
+                <div class="option" data-value="reject" onclick="selectDeclaration(this, 'hnwiDeclaration', 8)">
+                    <span class="option-letter">B</span>
+                    <span class="option-text">I don't accept</span>
+                </div>
+            </div>
+            <button class="btn" onclick="submitHnwiForm()" id="submitBtn8">
+                <span class="spinner" id="spinner8"></span>
+                Submit
+            </button>
+        </div>
+
+        <div class="slide" data-slide="9">
+            <h2 class="question-title">
+                <span class="question-number">9</span>
+                How many investments in unlisted companies have you made in the previous 2 years?
+            </h2>
+            <div class="form-group">
+                <input type="text" id="investmentCount" placeholder="Type your answer here...">
+            </div>
+            <button class="btn btn-small" onclick="validateInvestmentCountAndNext()">OK</button>
+        </div>
+
+        <div class="slide" data-slide="10">
+            <h2 class="question-title">
+                <span class="question-number">10</span>
+                What is the name of the company?*
+            </h2>
+            <div class="form-group">
+                <input type="text" id="directorCompanyName" placeholder="Type your answer here...">
+            </div>
+            <button class="btn btn-small" onclick="validateDirectorCompanyAndNext()">OK</button>
+        </div>
+
+        <div class="slide" data-slide="11">
+            <h2 class="question-title">
+                <span class="question-number">11</span>
+                What is the name of the Network or Syndicate?*
+            </h2>
+            <div class="form-group">
+                <input type="text" id="networkName" placeholder="Type your answer here...">
+            </div>
+            <button class="btn btn-small" onclick="validateNetworkAndNext()">OK</button>
+        </div>
+
+        <div class="slide" data-slide="12">
+            <h2 class="question-title">
+                <span class="question-number">12</span>
+                What is the name of the company?*
+            </h2>
+            <div class="form-group">
+                <input type="text" id="professionalCompanyName" placeholder="Type your answer here...">
+            </div>
+            <button class="btn btn-small" onclick="validateProfessionalCompanyAndNext()">OK</button>
+        </div>
+
+        <div class="slide" data-slide="13">
+            <h2 class="question-title">
+                <span class="question-number">13</span>
+                I declare that I have answered yes to A, B, C and/or D, and wish to be treated as a self-certified sophisticated investor.
+            </h2>
+            <div class="disclaimer">
+                I understand that this means:
+                <ul>
+                    <li>I can receive financial promotions where the contents may not comply with rules made by the Financial Conduct Authority (FCA);</li>
+                    <li>I can expect no protection from the FCA, the Financial Ombudsman Service or the Financial Services Compensation Scheme.</li>
+                </ul>
+                I am aware that it is open to me to seek advice from someone who specialises in advising on investments.<br><br>
+                I accept that I could lose all of the money I invest.<br><br>
+                I confirm that I understand that Rocketphone.ai is not acting for me, and I understand that it will not be responsible for providing me with the protections afforded to clients of the firm. I understand that it will not be advising me on the relevant transaction.*
+            </div>
+            
+            <div class="error-message" id="errorMessage13">
+                <svg viewBox="0 0 24 24"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+                <span>Please agree to the terms & conditions</span>
+            </div>
+            
+            <div class="options-container" id="sophisticatedDeclarationOptions">
+                <div class="option" data-value="accept" onclick="selectDeclaration(this, 'sophisticatedDeclaration', 13)">
+                    <span class="option-letter">A</span>
+                    <span class="option-text">I accept</span>
+                </div>
+                <div class="option" data-value="reject" onclick="selectDeclaration(this, 'sophisticatedDeclaration', 13)">
+                    <span class="option-letter">B</span>
+                    <span class="option-text">I don't accept</span>
+                </div>
+            </div>
+            <button class="btn" onclick="submitSophisticatedForm()" id="submitBtn13">
+                <span class="spinner" id="spinner13"></span>
+                Submit
+            </button>
+        </div>
+
+        <div class="slide thank-you-slide" data-slide="14">
+            <h2>Thank you for completing the Self-Certification</h2>
+            <p>You're now eligible to receive the material from our Team.</p>
+            <p class="stay-touch">Stay in Touch</p>
+        </div>
+    </div>
+
+    <div class="nav-buttons">
+        <button class="nav-btn" id="prevBtn" onclick="prevSlide()" disabled>
+            <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+        </button>
+        <button class="nav-btn" id="nextBtn" onclick="nextSlide()">
+            <svg viewBox="0 0 24 24"><path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z"/></svg>
+        </button>
+    </div>
+
+    <script>
+        // Form data storage
+        const formData = {
+            firstName: '',
+            lastName: '',
+            phone: '',
+            email: '',
+            jurisdiction: '',
+            investorType: '',
+            hnwiQualification: '',
+            sophisticatedQualification: '',
+            incomeAmount: '',
+            netAssets: '',
+            investmentCount: '',
+            directorCompanyName: '',
+            networkName: '',
+            professionalCompanyName: '',
+            hnwiDeclaration: '',
+            sophisticatedDeclaration: ''
+        };
+
+        // Get slide sequence based on choices
+        function getSlideSequence() {
+            const sequence = [0, 1, 2, 3];
+            
+            if (formData.investorType === 'HNWI') {
+                sequence.push(4); // HNWI qualification
+                
+                if (formData.hnwiQualification === 'Income') {
+                    sequence.push(6); // Income specification
+                } else if (formData.hnwiQualification === 'NetAssets') {
+                    sequence.push(7); // Net Assets specification
+                }
+                
+                sequence.push(8); // HNWI Declaration
+            
+            } else if (formData.investorType === 'Sophisticated') {
+                sequence.push(5); // Sophisticated qualification
+                
+                if (formData.sophisticatedQualification === 'Investment') {
+                    sequence.push(9); // How many investments
+                } else if (formData.sophisticatedQualification === 'Director') {
+                    sequence.push(10); // Company name (director)
+                } else if (formData.sophisticatedQualification === 'Angel') {
+                    sequence.push(11); // Network/Syndicate name
+                } else if (formData.sophisticatedQualification === 'Professional') {
+                    sequence.push(12); // Company name (professional)
+                }
+                
+                sequence.push(13); // Sophisticated Declaration
+            }
+            
+            sequence.push(14); // Thank you
+            return sequence;
+        }
+
+        function getCurrentSlideIndex() {
+            const sequence = getSlideSequence();
+            const currentSlideData = parseInt(document.querySelector('.slide.active').dataset.slide);
+            return sequence.indexOf(currentSlideData);
+        }
+
+        function updateProgress() {
+            const sequence = getSlideSequence();
+            const currentIndex = getCurrentSlideIndex();
+            const progress = (currentIndex / (sequence.length - 1)) * 100;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+        }
+
+        function showSlide(slideId) {
+            document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+            document.querySelector(`[data-slide="${slideId}"]`).classList.add('active');
+            updateProgress();
+            updateNavButtons();
+        }
+
+        function nextSlide() {
+            const sequence = getSlideSequence();
+            const currentIndex = getCurrentSlideIndex();
+            if (currentIndex < sequence.length - 1) {
+                showSlide(sequence[currentIndex + 1]);
+            }
+        }
+
+        function prevSlide() {
+            const sequence = getSlideSequence();
+            const currentIndex = getCurrentSlideIndex();
+            if (currentIndex > 0) {
+                showSlide(sequence[currentIndex - 1]);
+            }
+        }
+
+        function updateNavButtons() {
+            const sequence = getSlideSequence();
+            const currentIndex = getCurrentSlideIndex();
+            document.getElementById('prevBtn').disabled = currentIndex === 0;
+            document.getElementById('nextBtn').disabled = currentIndex === sequence.length - 1;
+            
+            // Hide nav buttons on welcome and thank you slides
+            const currentSlideData = parseInt(document.querySelector('.slide.active').dataset.slide);
+            const navButtons = document.querySelector('.nav-buttons');
+            if (currentSlideData === 0 || currentSlideData === 14) {
+                navButtons.style.display = 'none';
+            } else {
+                navButtons.style.display = 'flex';
+            }
+        }
+
+        // Option selection
+        function selectOption(element, field) {
+            const container = element.parentElement;
+            container.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('selected');
+                opt.classList.remove('error');
+            });
+            element.classList.add('selected');
+            formData[field] = element.dataset.value;
+        }
+
+        // Declaration selection with error handling
+        function selectDeclaration(element, field, slideNum) {
+            const container = element.parentElement;
+            container.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('selected');
+                opt.classList.remove('error');
+            });
+            element.classList.add('selected');
+            formData[field] = element.dataset.value;
+            
+            // Hide error message when selecting
+            document.getElementById(`errorMessage${slideNum}`).classList.remove('show');
+            
+            // Show error if "I don't accept" is selected
+            if (element.dataset.value === 'reject') {
+                element.classList.add('error');
+                document.getElementById(`errorMessage${slideNum}`).classList.add('show');
+            }
+        }
+
+        // Validation functions
+        function validateContactAndNext() {
+            formData.firstName = document.getElementById('firstName').value.trim();
+            formData.lastName = document.getElementById('lastName').value.trim();
+            formData.phone = document.getElementById('phone').value.trim();
+            formData.email = document.getElementById('email').value.trim();
+            if (!formData.firstName || !formData.lastName || !formData.phone || !formData.email) {
+                alert('Please fill in all contact details.');
+                return;
+            }
+            if (!isValidEmail(formData.email)) {
+                alert('Please enter a valid email address.');
+                return;
+            }
+            nextSlide();
+        }
+
+        function isValidEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        function validateSelectionAndNext(field) {
+            if (!formData[field]) {
+                alert('Please select an option.');
+                return;
+            }
+            nextSlide();
+        }
+
+        function validateInvestorTypeAndNext() {
+            if (!formData.investorType) {
+                alert('Please select an investor type.');
+                return;
+            }
+            nextSlide();
+        }
+
+        function validateHnwiQualificationAndNext() {
+            if (!formData.hnwiQualification) {
+                alert('Please select a qualification.');
+                return;
+            }
+            nextSlide();
+        }
+
+        function validateSophisticatedQualificationAndNext() {
+            if (!formData.sophisticatedQualification) {
+                alert('Please select a qualification.');
+                return;
+            }
+            nextSlide();
+        }
+
+        function validateIncomeAndNext() {
+            formData.incomeAmount = document.getElementById('incomeAmount').value.trim();
+            if (!formData.incomeAmount) {
+                alert('Please specify your income.');
+                return;
+            }
+            nextSlide();
+        }
+
+        function validateNetAssetsAndNext() {
+            formData.netAssets = document.getElementById('netAssets').value.trim();
+            if (!formData.netAssets) {
+                alert('Please specify your net assets.');
+                return;
+            }
+            nextSlide();
+        }
+
+        function validateInvestmentCountAndNext() {
+            formData.investmentCount = document.getElementById('investmentCount').value.trim();
+            if (!formData.investmentCount) {
+                alert('Please specify the number of investments.');
+                return;
+            }
+            nextSlide();
+        }
+
+        function validateDirectorCompanyAndNext() {
+            formData.directorCompanyName = document.getElementById('directorCompanyName').value.trim();
+            if (!formData.directorCompanyName) {
+                alert('Please specify the company name.');
+                return;
+            }
+            nextSlide();
+        }
+
+        function validateNetworkAndNext() {
+            formData.networkName = document.getElementById('networkName').value.trim();
+            if (!formData.networkName) {
+                alert('Please specify the network or syndicate name.');
+                return;
+            }
+            nextSlide();
+        }
+
+        function validateProfessionalCompanyAndNext() {
+            formData.professionalCompanyName = document.getElementById('professionalCompanyName').value.trim();
+            if (!formData.professionalCompanyName) {
+                alert('Please specify the company name.');
+                return;
+            }
+            nextSlide();
+        }
+
+        // Submit HNWI form (HARD ACCEPT)
+        async function submitHnwiForm() {
+            if (!formData.hnwiDeclaration) {
+                document.getElementById('errorMessage8').classList.add('show');
+                return;
+            }
+            
+            if (formData.hnwiDeclaration !== 'accept') {
+                document.getElementById('errorMessage8').classList.add('show');
+                // Highlight the reject option as error
+                document.querySelector('#hnwiDeclarationOptions .option[data-value="reject"]').classList.add('error');
+                return;
+            }
+            await submitToGoogleSheets('8');
+        }
+
+        // Submit Sophisticated form (HARD ACCEPT)
+        async function submitSophisticatedForm() {
+            if (!formData.sophisticatedDeclaration) {
+                document.getElementById('errorMessage13').classList.add('show');
+                return;
+            }
+            
+            if (formData.sophisticatedDeclaration !== 'accept') {
+                document.getElementById('errorMessage13').classList.add('show');
+                // Highlight the reject option as error
+                document.querySelector('#sophisticatedDeclarationOptions .option[data-value="reject"]').classList.add('error');
+                return;
+            }
+            await submitToGoogleSheets('13');
+        }
+
+        // Submit to Google Sheets
+        async function submitToGoogleSheets(slideNum) {
+            const spinner = document.getElementById(`spinner${slideNum}`);
+            const submitBtn = document.getElementById(`submitBtn${slideNum}`);
+            
+            spinner.style.display = 'block';
+            submitBtn.disabled = true;
+
+            // Prepare data for Google Sheets
+            const sheetData = {
+                timestamp: new Date().toISOString(),
+                firstName: formData.firstName,
+                lastName: formData.lastName,
+                phone: formData.phone,
+                email: formData.email,
+                jurisdiction: formData.jurisdiction,
+                investorType: formData.investorType,
+                qualification: formData.investorType === 'HNWI' ? formData.hnwiQualification : formData.sophisticatedQualification,
+                incomeAmount: formData.incomeAmount || 'N/A',
+                netAssets: formData.netAssets || 'N/A',
+                investmentCount: formData.investmentCount || 'N/A',
+                directorCompanyName: formData.directorCompanyName || 'N/A',
+                networkName: formData.networkName || 'N/A',
+                professionalCompanyName: formData.professionalCompanyName || 'N/A',
+                declaration: formData.investorType === 'HNWI' ? formData.hnwiDeclaration : formData.sophisticatedDeclaration
+            };
+
+            try {
+                // Replace with your Google Apps Script Web App URL
+                const GOOGLE_SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+                
+                if (GOOGLE_SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
+                    // Demo mode - just proceed without sending
+                    console.log('Demo mode - data would be sent:', sheetData);
+                    setTimeout(() => {
+                        spinner.style.display = 'none';
+                        submitBtn.disabled = false;
+                        nextSlide();
+                    }, 1000);
+                    return;
+                }
+
+                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(sheetData)
+                });
+
+                spinner.style.display = 'none';
+                submitBtn.disabled = false;
+                nextSlide();
+            } catch (error) {
+                console.error('Error submitting form:', error);
+                spinner.style.display = 'none';
+                submitBtn.disabled = false;
+                alert('There was an error submitting the form. Please try again.');
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const activeSlide = document.querySelector('.slide.active');
+                const okBtn = activeSlide.querySelector('.btn');
+                if (okBtn) okBtn.click();
+            }
+        });
+
+        // Initialize
+        updateNavButtons();
+    </script>
+</body>
+</html>
