@@ -63,7 +63,7 @@
             66% { transform: translate(-2%, 1%) rotate(-1deg); }
         }
 
-        /* --- NUOVO STILE PER IL LOGO CENTRALE --- */
+        /* --- LOGO CENTRALE --- */
         .main-logo {
             position: absolute;
             top: 40px;
@@ -99,7 +99,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 140px 20px 40px 20px; /* Aumentato padding top per il logo */
+            padding: 140px 20px 40px 20px;
         }
 
         /* Slides */
@@ -107,7 +107,6 @@
             display: none;
             width: 100%;
             max-width: 750px;
-            /* Rimosso padding-right che serviva per i loghi laterali */
             padding-right: 0; 
             animation: fadeInUp 0.5s ease;
         }
@@ -470,7 +469,6 @@
             .nav-buttons {
                 right: 20px;
             }
-            /* Adjust logo on mobile if needed */
             .main-logo {
                 width: 100px;
                 top: 20px;
@@ -1039,7 +1037,6 @@
             
             if (formData.hnwiDeclaration !== 'accept') {
                 document.getElementById('errorMessage8').classList.add('show');
-                // Highlight the reject option as error
                 document.querySelector('#hnwiDeclarationOptions .option[data-value="reject"]').classList.add('error');
                 return;
             }
@@ -1055,7 +1052,6 @@
             
             if (formData.sophisticatedDeclaration !== 'accept') {
                 document.getElementById('errorMessage13').classList.add('show');
-                // Highlight the reject option as error
                 document.querySelector('#sophisticatedDeclarationOptions .option[data-value="reject"]').classList.add('error');
                 return;
             }
@@ -1066,6 +1062,18 @@
         async function submitToGoogleSheets(slideNum) {
             const spinner = document.getElementById(`spinner${slideNum}`);
             const submitBtn = document.getElementById(`submitBtn${slideNum}`);
+            
+            // --------- CONFIGURAZIONE URL GOOGLE APPS SCRIPT ---------
+            // Sostituisci la stringa qui sotto con l'URL che hai ottenuto dal Passo 3
+            // Esempio: 'https://script.google.com/macros/s/AKfycb.../exec'
+            const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw2u51t_x-A4sxmqcwERvnllp3WVZERfUDF0s6_HjrTnd-vSvylS-YlkFq6A4qnci7q/exec';
+            // ---------------------------------------------------------
+
+            // Check se l'utente ha inserito l'URL
+            if (GOOGLE_SCRIPT_URL === 'https://script.google.com/macros/s/AKfycbw2u51t_x-A4sxmqcwERvnllp3WVZERfUDF0s6_HjrTnd-vSvylS-YlkFq6A4qnci7q/exec') {
+                alert("ATTENZIONE: Non hai ancora collegato il database.\n\nDevi completare il Passo 3 della guida e incollare l'URL dello script alla riga 795 del codice HTML.");
+                return;
+            }
             
             spinner.style.display = 'block';
             submitBtn.disabled = true;
@@ -1090,29 +1098,19 @@
             };
 
             try {
-                // Replace with your Google Apps Script Web App URL
-                const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw2u51t_x-A4sxmqcwERvnllp3WVZERfUDF0s6_HjrTnd-vSvylS-YlkFq6A4qnci7q/exec';
-                
-                if (GOOGLE_SCRIPT_URL === 'https://script.google.com/macros/s/AKfycbw2u51t_x-A4sxmqcwERvnllp3WVZERfUDF0s6_HjrTnd-vSvylS-YlkFq6A4qnci7q/exec') {
-                    // Demo mode - just proceed without sending
-                    console.log('Demo mode - data would be sent:', sheetData);
-                    setTimeout(() => {
-                        spinner.style.display = 'none';
-                        submitBtn.disabled = false;
-                        nextSlide();
-                    }, 1000);
-                    return;
-                }
-
-                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                // Usiamo fetch con mode: 'no-cors' perché Google Apps Script 
+                // non invia header CORS standard, ma accetta comunque i dati POST.
+                await fetch(GOOGLE_SCRIPT_URL, {
                     method: 'POST',
-                    mode: 'no-cors',
+                    mode: 'no-cors', // Fondamentale per far funzionare Google Apps Script da browser
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify(sheetData)
                 });
 
+                // Se la fetch non fallisce (rete ok), assumiamo successo
+                // (no-cors non ci permette di leggere la risposta "success" ma invia i dati)
                 spinner.style.display = 'none';
                 submitBtn.disabled = false;
                 nextSlide();
@@ -1120,7 +1118,7 @@
                 console.error('Error submitting form:', error);
                 spinner.style.display = 'none';
                 submitBtn.disabled = false;
-                alert('There was an error submitting the form. Please try again.');
+                alert('Errore di connessione. Controlla la tua connessione internet e riprova.');
             }
         }
 
@@ -1138,4 +1136,3 @@
     </script>
 </body>
 </html>
-
