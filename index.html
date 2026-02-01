@@ -1107,13 +1107,14 @@
                 jurisdiction: formData.jurisdiction,
                 investorType: formData.investorType,
                 qualification: formData.investorType === 'HNWI' ? formData.hnwiQualification : formData.sophisticatedQualification,
-                incomeAmount: formData.incomeAmount || 'N/A',
-                netAssets: formData.netAssets || 'N/A',
-                investmentCount: formData.investmentCount || 'N/A',
-                directorCompanyName: formData.directorCompanyName || 'N/A',
-                networkName: formData.networkName || 'N/A',
-                professionalCompanyName: formData.professionalCompanyName || 'N/A',
+                incomeAmount: formData.incomeAmount || '',
+                netAssets: formData.netAssets || '',
+                investmentCount: formData.investmentCount || '',
+                directorCompanyName: formData.directorCompanyName || '',
+                networkName: formData.networkName || '',
+                professionalCompanyName: formData.professionalCompanyName || '',
                 declaration: formData.investorType === 'HNWI' ? formData.hnwiDeclaration : formData.sophisticatedDeclaration
+                id: 'APP-' + Math.random().toString(36).substring(2, 8).toUpperCase()
             };
 
             if (GOOGLE_SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
@@ -1203,4 +1204,5 @@
     </script>
 </body>
 </html>
+
 
