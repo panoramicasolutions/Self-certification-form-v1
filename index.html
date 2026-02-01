@@ -826,9 +826,9 @@
     </div>
 
     <script>
-        // =====  APPS SCRIPT URL =====
+        // ===== GOOGLE APPS SCRIPT URL =====
         // Replace with your Google Apps Script Web App URL
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxh6xZuIfQ0M43kMiTkiel10KAiWclVP7iRp1r5qfEKjSFdKGiCOdCNCS9h_5K_r16d/exec';
+        const GOOGLE_SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
         // ==================================
 
         // Form data storage
@@ -1117,7 +1117,6 @@
             };
 
             if (GOOGLE_SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
-                // Demo mode - just proceed without sending
                 console.log('Demo mode - data would be sent:', sheetData);
                 setTimeout(function() {
                     spinner.style.display = 'none';
@@ -1127,22 +1126,23 @@
                 return;
             }
 
-            // Use a hidden form to POST data (avoids CORS issues completely)
-            var form = document.createElement('form');
-            form.method = 'POST';
-            form.action = GOOGLE_SCRIPT_URL;
-            form.target = 'hidden_iframe';
-            
-            // Add each field as a hidden input
-            for (var key in sheetData) {
-                var input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = key;
-                input.value = sheetData[key];
-                form.appendChild(input);
-            }
-            
-            // Create hidden iframe to receive the response
+            // Build URL-encoded form data string
+            var formBody = Object.keys(sheetData).map(function(key) {
+                return encodeURIComponent(key) + '=' + encodeURIComponent(sheetData[key]);
+            }).join('&');
+
+            // Attempt 1: fetch with no-cors and URL-encoded body
+            var attempt1 = fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: formBody
+            }).catch(function(err) {
+                console.log('Fetch attempt failed:', err);
+                return null;
+            });
+
+            // Attempt 2: hidden iframe form POST as backup
             var iframe = document.getElementById('hidden_iframe');
             if (!iframe) {
                 iframe = document.createElement('iframe');
@@ -1151,17 +1151,42 @@
                 iframe.style.display = 'none';
                 document.body.appendChild(iframe);
             }
+
+            var form = document.createElement('form');
+            form.method = 'POST';
+            form.action = GOOGLE_SCRIPT_URL;
+            form.target = 'hidden_iframe';
+            
+            for (var key in sheetData) {
+                var input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = key;
+                input.value = sheetData[key];
+                form.appendChild(input);
+            }
             
             document.body.appendChild(form);
             form.submit();
             document.body.removeChild(form);
+
+            // Wait for iframe to load (confirms data received) or timeout after 4s
+            var done = false;
             
-            // Move to thank you slide after a short delay
-            setTimeout(function() {
+            function finish() {
+                if (done) return;
+                done = true;
                 spinner.style.display = 'none';
                 submitBtn.disabled = false;
                 nextSlide();
-            }, 1500);
+            }
+
+            iframe.onload = function() {
+                // Iframe loaded = Google received the data
+                setTimeout(finish, 300);
+            };
+
+            // Safety timeout - proceed after 4 seconds regardless
+            setTimeout(finish, 4000);
         }
 
         // Keyboard navigation
@@ -1178,4 +1203,3 @@
     </script>
 </body>
 </html>
-
